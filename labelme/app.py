@@ -629,11 +629,11 @@ class MainWindow(QtWidgets.QMainWindow):
             ),
             # menu shown at right click
             menu=(
-                createMode,
+                createPointMode,
                 createRectangleMode,
                 createCircleMode,
+                createMode,
                 createLineMode,
-                createPointMode,
                 createLineStripMode,
                 editMode,
                 edit,
@@ -737,7 +737,7 @@ class MainWindow(QtWidgets.QMainWindow):
             save,
             deleteFile,
             None,
-            createMode,
+            createPointMode,
             editMode,
             duplicate,
             copy,
