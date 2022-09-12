@@ -530,6 +530,25 @@ class MainWindow(QtWidgets.QMainWindow):
             "Adjust brightness and contrast",
             enabled=False,
         )
+        def _show_stats():
+            labels = [item.shape().label for item in self.labelList]
+            from collections import Counter
+            c = Counter(labels)
+            stats = '\n'.join(['{}:{}'.format(k, v) for k, v in c.items()])
+            mb = QtWidgets.QMessageBox
+            answer = mb.information(self, self.tr("Stats"), stats, mb.Ok)
+            if answer != mb.Yes:
+                return
+            print(stats)
+
+        showStats = action(
+            text=self.tr("Show stats"),
+            slot=_show_stats,
+            icon=None,
+            tip=self.tr("Show annotation stats"),
+            checkable=False,
+            enabled=True,
+        )
         # Group zoom controls into a list for easier toggling.
         zoomActions = (
             self.zoomWidget,
@@ -610,6 +629,7 @@ class MainWindow(QtWidgets.QMainWindow):
             fitWindow=fitWindow,
             fitWidth=fitWidth,
             brightnessContrast=brightnessContrast,
+            showStats=showStats,
             zoomActions=zoomActions,
             openNextImg=openNextImg,
             openPrevImg=openPrevImg,
@@ -656,6 +676,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 createLineStripMode,
                 editMode,
                 brightnessContrast,
+                showStats,
             ),
             onShapesPresent=(saveAs, hideAll, showAll),
         )
@@ -713,6 +734,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 fitWidth,
                 None,
                 brightnessContrast,
+                showStats,
             ),
         )
 
@@ -746,6 +768,7 @@ class MainWindow(QtWidgets.QMainWindow):
             delete,
             undo,
             brightnessContrast,
+            showStats,
             None,
             zoom,
             fitWidth,
