@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import functools
+import json
 import math
 import os
 import os.path as osp
@@ -2009,13 +2010,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 label_file = osp.join(self.output_dir, label_file_without_path)
             item = QtWidgets.QListWidgetItem(file)
             item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
-            if QtCore.QFile.exists(label_file) and LabelFile.is_label_file(
+            json_exists = QtCore.QFile.exists(label_file) and LabelFile.is_label_file(
                 label_file
-            ):
-                item.setCheckState(Qt.Checked)
-            else:
-                item.setCheckState(Qt.Unchecked)
-            self.fileListWidget.addItem(item)
+            )
+            item.setCheckState(Qt.Checked if json_exists else Qt.Unchecked)
 
         if len(self.imageList) > 1:
             self.actions.openNextImg.setEnabled(True)
@@ -2033,6 +2031,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lastOpenDir = dirpath
         self.filename = None
         self.fileListWidget.clear()
+        ignore_nojson = self._config["ignore_nojson"]
         for filename in self.scanAllImages(dirpath):
             if pattern and pattern not in filename:
                 continue
@@ -2042,13 +2041,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 label_file = osp.join(self.output_dir, label_file_without_path)
             item = QtWidgets.QListWidgetItem(filename)
             item.setFlags(Qt.ItemIsEnabled | Qt.ItemIsSelectable)
-            if QtCore.QFile.exists(label_file) and LabelFile.is_label_file(
+            json_exists = QtCore.QFile.exists(label_file) and LabelFile.is_label_file(
                 label_file
-            ):
-                item.setCheckState(Qt.Checked)
-            else:
-                item.setCheckState(Qt.Unchecked)
-            self.fileListWidget.addItem(item)
+            )
+            item.setCheckState(Qt.Checked if json_exists else Qt.Unchecked)
+            if json_exists:
+                self.fileListWidget.addItem(item)
+            elif not ignore_nojson:
+                self.fileListWidget.addItem(item)
         self.openNextImg(load=load)
 
     def scanAllImages(self, folderPath):

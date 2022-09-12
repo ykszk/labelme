@@ -102,6 +102,11 @@ def main():
         default=argparse.SUPPRESS,
     )
     parser.add_argument(
+        "--ignore-nojson",
+        action="store_true",
+        help="ignore image files with no json"
+    )
+    parser.add_argument(
         "--epsilon",
         type=float,
         help="epsilon to find nearest vertex on canvas",
