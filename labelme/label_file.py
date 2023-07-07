@@ -102,6 +102,8 @@ class LabelFile(object):
                         filename, version, __version__
                     )
                 )
+            if "imagePath" in data:
+                data["imagePath"] = data["imagePath"].replace('\\', '/')
 
             if data["imageData"] is not None:
                 imageData = base64.b64decode(data["imageData"])
